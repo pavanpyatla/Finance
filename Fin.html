@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIN213 — Unit-Wise Smart Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #f7f4ef;
+  --paper: #fffef9;
+  --ink: #1a1814;
+  --ink2: #3d3a33;
+  --muted: #8a8478;
+  --rule: #e0dbd0;
+  --u1: #c0392b; --u1l: #fdf1f0;
+  --u2: #1a5276; --u2l: #eaf2fb;
+  --u3: #1e8449; --u3l: #eafaf1;
+  --u4: #6c3483; --u4l: #f5eef8;
+  --u5: #b7600a; --u5l: #fef9f0;
+  --u6: #117a65; --u6l: #e8f8f5;
+  --high: #c0392b;
+  --med: #d68910;
+  --low: #7f8c8d;
+  --yellow: #fff3cd;
+  --green: #d4edda;
+  --red: #f8d7da;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* HEADER */
+.main-header {
+  background: var(--ink);
+  color: #f7f4ef;
+  padding: 36px 48px 30px;
+  position: relative;
+  overflow: hidden;
+}
+.main-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--u1),var(--u2),var(--u3),var(--u4),var(--u5),var(--u6));
+}
+.header-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #a09a8e;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.header-title em { font-style: italic; color: #d4a843; }
+.header-sub { color: #a09a8e; font-size: 14px; }
+.header-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #d4cfc6;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* STICKY NAV */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(247,244,239,0.97);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--rule);
+  padding: 10px 48px;
+  display: flex; gap: 4px; flex-wrap: wrap;
+  align-items: center;
+}
+.nav-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.nav-link:hover { border-color: currentColor; }
+.n1 { color: var(--u1); } .n1:hover { background: var(--u1l); }
+.n2 { color: var(--u2); } .n2:hover { background: var(--u2l); }
+.n3 { color: var(--u3); } .n3:hover { background: var(--u3l); }
+.n4 { color: var(--u4); } .n4:hover { background: var(--u4l); }
+.n5 { color: var(--u5); } .n5:hover { background: var(--u5l); }
+.n6 { color: var(--u6); } .n6:hover { background: var(--u6l); }
+.nav-end { color: var(--ink); } .nav-end:hover { background: var(--rule); }
+
+/* MAIN */
+.container { max-width: 980px; margin: 0 auto; padding: 0 40px 60px; }
+
+/* UNIT SECTION */
+.unit-section { margin-top: 52px; }
+.unit-banner {
+  border-radius: 8px 8px 0 0;
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.unit-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.25;
+}
+.unit-info {}
+.unit-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.unit-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; }
+.unit-topics-bar {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 3px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.unit-body {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 28px;
+}
+
+/* U1 colors */
+.u1 .unit-banner { background: var(--u1l); color: var(--u1); }
+.u2 .unit-banner { background: var(--u2l); color: var(--u2); }
+.u3 .unit-banner { background: var(--u3l); color: var(--u3); }
+.u4 .unit-banner { background: var(--u4l); color: var(--u4); }
+.u5 .unit-banner { background: var(--u5l); color: var(--u5); }
+.u6 .unit-banner { background: var(--u6l); color: var(--u6); }
+
+/* TOPIC CARDS */
+.topic { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px dashed var(--rule); }
+.topic:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.topic-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.topic-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  flex: 1;
+}
+.topic-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+.prob-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+.prob-high { background: var(--red); color: var(--high); }
+.prob-med { background: var(--yellow); color: #8a6200; }
+.prob-low { background: #f0f0f0; color: var(--low); }
+.marks-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: var(--ink);
+  color: #f7f4ef;
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+
+/* CONTENT ELEMENTS */
+.def-box {
+  background: #fffbf0;
+  border-left: 3px solid #d4a843;
+  padding: 10px 16px;
+  margin: 10px 0;
+  font-style: italic;
+  font-size: 14px;
+  border-radius: 0 4px 4px 0;
+}
+
+ul.points {
+  padding-left: 0;
+  list-style: none;
+}
+ul.points li {
+  padding: 4px 0 4px 22px;
+  position: relative;
+  font-size: 14px;
+}
+ul.points li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+ul.points li strong { color: var(--ink); }
+
+ol.steps { padding-left: 20px; }
+ol.steps li { font-size: 14px; padding: 3px 0; }
+
+/* STRUCTURE BOX */
+.structure-box {
+  background: #f0f7ff;
+  border: 1px solid #c5d8ee;
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin-top: 12px;
+}
+.structure-box .sb-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--u2);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.structure-box ol { padding-left: 18px; }
+.structure-box li { font-size: 13px; padding: 2px 0; }
+
+/* KEYWORD BOX */
+.kw-box {
+  background: var(--green);
+  border: 1px solid #b8ddc4;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 10px;
+}
+.kw-box .kw-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #1e5a30;
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.kw-pill {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #b8ddc4;
+  color: #1e5a30;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 3px 3px 3px 0;
+  font-weight: 600;
+}
+
+/* TABLE */
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+.cmp-table th {
+  background: var(--ink2);
+  color: #f7f4ef;
+  padding: 8px 12px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+.cmp-table td { padding: 8px 12px; border-bottom: 1px solid var(--rule); font-size: 13px; }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table td:first-child { font-weight: 600; color: var(--ink2); }
+.cmp-table tr:nth-child(even) td { background: #fafaf7; }
+
+/* MNEMONIC */
+.mnemonic {
+  background: #fdf0ff;
+  border: 1px dashed #c39bd3;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+.mnemonic .m-word {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--u4);
+  margin-bottom: 4px;
+}
+.mnemonic .m-exp { color: var(--ink2); }
+
+/* EXAM TIP */
+.exam-tip {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+.exam-tip::before {
+  content: '💡 Exam Tip: ';
+  font-weight: 700;
+  color: #8a6200;
+}
+
+/* SUB HEADING */
+.sh {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+
+/* SKIP/STUDY SECTION */
+.final-section {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 28px;
+  margin-top: 52px;
+}
+.final-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--rule);
+}
+
+.ranked-item {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: flex-start;
+}
+.ranked-item:last-child { border-bottom: none; }
+.rank-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--muted);
+  min-width: 30px;
+  line-height: 1;
+  padding-top: 3px;
+}
+.rank-content {}
+.rank-title { font-weight: 700; font-size: 14px; }
+.rank-why { font-size: 12px; color: var(--muted); }
+
+.skip-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.skip-item:last-child { border-bottom: none; }
+.skip-x { color: var(--high); font-weight: 700; font-size: 18px; min-width: 20px; }
+.skip-content { font-size: 14px; }
+.skip-content strong { color: var(--high); }
+.skip-content small { color: var(--muted); display: block; }
+
+.strat-box {
+  background: var(--ink);
+  color: #f7f4ef;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-top: 20px;
+}
+.strat-box h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 14px;
+  color: #d4a843;
+}
+.strat-box li {
+  font-size: 13px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  list-style: none;
+  padding-left: 18px;
+  position: relative;
+}
+.strat-box li::before { content: '▸'; position: absolute; left: 0; color: #d4a843; }
+.strat-box li:last-child { border-bottom: none; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:700px) { .grid2 { grid-template-columns: 1fr; } }
+
+.highlight-box {
+  background: var(--yellow);
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: #f0f0ec;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="main-header">
+  <div class="header-eyebrow">Unit-Wise Smart Theory Notes</div>
+  <div class="header-title">FIN213: <em>Indian Financial System</em></div>
+  <div class="header-sub">Compact. Exam-focused. Built from your professor's 27 PPTs + syllabus.</div>
+  <div class="header-chips">
+    <span class="chip">6 Units</span>
+    <span class="chip">Exam Tomorrow</span>
+    <span class="chip">2-Mark + 10-Mark Format</span>
+    <span class="chip">Score-Maximized</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="sticky-nav">
+  <a href="#u1" class="nav-link n1">Unit I — Financial System</a>
+  <a href="#u2" class="nav-link n2">Unit II — Capital &amp; Money Market</a>
+  <a href="#u3" class="nav-link n3">Unit III — Financial Services</a>
+  <a href="#u4" class="nav-link n4">Unit IV — Banking System</a>
+  <a href="#u5" class="nav-link n5">Unit V — Forex</a>
+  <a href="#u6" class="nav-link n6">Unit VI — Regulations</a>
+  <a href="#final" class="nav-link nav-end">★ Final Strategy</a>
+</div>
+
+<div class="container">
+
+<!-- ======================== UNIT I ======================== -->
+<div id="u1" class="unit-section u1">
+  <div class="unit-banner">
+    <div class="unit-num">I</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit One</div>
+      <div class="unit-title">Introduction to Indian Financial System</div>
+      <div class="unit-topics-bar">Overview · Functions · Components · Key Elements · Nature & Role</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">1.1 What is the Indian Financial System?</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"A financial system enables lenders and borrowers to exchange funds. It plays a significant role in economic growth by mobilising surplus funds and utilising them effectively for productive purposes."</div>
+      <div class="sh">Key Points</div>
+      <ul class="points">
+        <li><strong>Link between savers and investors</strong> — moves idle funds into productive use</li>
+        <li>Controlled by <strong>independent regulators</strong>: RBI (banking), SEBI (capital markets), IRDA (insurance)</li>
+        <li>Encourages both <strong>savings and investment</strong></li>
+        <li>Helps in <strong>capital formation and risk allocation</strong></li>
+        <li>Facilitates expansion of financial markets</li>
+      </ul>
+
+      <div class="sh">4 Components of Indian Financial System</div>
+      <ul class="points">
+        <li><strong>Financial Institutions</strong> — banks, NBFCs, mutual funds, insurance companies</li>
+        <li><strong>Financial Markets</strong> — money market, capital market, forex market</li>
+        <li><strong>Financial Instruments</strong> — shares, bonds, treasury bills, debentures</li>
+        <li><strong>Financial Services</strong> — banking, factoring, leasing, merchant banking</li>
+      </ul>
+
+      <div class="sh">Functions of Financial System</div>
+      <ul class="points">
+        <li>Mobilises and allocates savings</li>
+        <li>Facilitates price discovery</li>
+        <li>Provides liquidity</li>
+        <li>Reduces risk through diversification</li>
+        <li>Provides payment mechanism</li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li><strong>Intro:</strong> Define financial system (1 line)</li>
+          <li><strong>4 Components:</strong> Institutions, Markets, Instruments, Services</li>
+          <li><strong>5 Functions:</strong> Mobilisation, Allocation, Liquidity, Payment, Risk</li>
+          <li><strong>Key Elements:</strong> Regulatory framework (RBI/SEBI/IRDA)</li>
+          <li><strong>Role in Economy:</strong> Capital formation, GDP growth, financial inclusion</li>
+          <li><strong>Conclusion:</strong> Backbone of economic development</li>
+        </ol>
+      </div>
+      <div class="kw-box">
+        <div class="kw-title">Must Memorize Keywords</div>
+        <span class="kw-pill">Surplus Units</span><span class="kw-pill">Deficit Units</span><span class="kw-pill">Capital Formation</span><span class="kw-pill">Financial Intermediaries</span><span class="kw-pill">RBI</span><span class="kw-pill">SEBI</span><span class="kw-pill">IRDA</span><span class="kw-pill">Mobilisation</span>
+      </div>
+      <div class="exam-tip">Professor's PPT says: "Households are surplus units (I&gt;E), Corporates and Governments are deficit units (E&gt;I)." Write this line in exam — it shows depth.</div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">1.2 Types of Financial Institutions</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">2 marks</span>
+        </div>
+      </div>
+      <ul class="points">
+        <li><strong>Banking Institutions:</strong> Commercial banks (scheduled/non-scheduled), Co-operative banks, Regional Rural Banks (RRBs), Foreign banks</li>
+        <li><strong>Non-Banking Institutions:</strong> Development Finance Institutions (IDBI, ICICI, IFCI), Investment Institutions (LIC, GIC, Mutual Funds), NBFCs (hire-purchase, leasing, housing finance)</li>
+        <li><strong>Organised Sector:</strong> RBI-regulated</li>
+        <li><strong>Unorganised Sector:</strong> Indigenous bankers, money lenders — unregulated, high interest rates</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== UNIT II ======================== -->
+<div id="u2" class="unit-section u2">
+  <div class="unit-banner">
+    <div class="unit-num">II</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit Two</div>
+      <div class="unit-title">Indian Capital Market &amp; Money Market</div>
+      <div class="unit-topics-bar">Capital Market · SEBI · Primary &amp; Secondary Market · Money Market · RBI</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <!-- Capital Market -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">2.1 Capital Market</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Capital markets facilitate buying and selling of long-term financial assets (stocks, bonds) to help governments and companies raise funds and enable investors to grow wealth."</div>
+      <div class="sh">Features of Capital Market</div>
+      <ul class="points">
+        <li><strong>Safety:</strong> Government regulated; SEBI oversight</li>
+        <li><strong>Channelises savings</strong> from households to industry</li>
+        <li><strong>Long-term investment</strong> platform</li>
+        <li><strong>Wealth creation</strong> through compounding</li>
+        <li><strong>Helps intermediaries</strong> — brokers, stock exchanges earn through transactions</li>
+      </ul>
+
+      <div class="sh">Primary Market vs Secondary Market</div>
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Primary Market</th><th>Secondary Market</th></tr>
+        <tr><td>Securities</td><td>New / Fresh Issues</td><td>Existing / Old Securities</td></tr>
+        <tr><td>Also called</td><td>New Issue Market</td><td>Stock Market</td></tr>
+        <tr><td>Money flows to</td><td>Company (issuer)</td><td>Investors (seller)</td></tr>
+        <tr><td>Physical existence</td><td>No (no fixed location)</td><td>Yes (BSE, NSE)</td></tr>
+        <tr><td>Example</td><td>IPO, FPO, Rights Issue</td><td>BSE, NSE daily trading</td></tr>
+        <tr><td>Price</td><td>Fixed/Band price</td><td>Market-determined</td></tr>
+      </table>
+
+      <div class="sh">Primary Market — Methods of Raising Capital</div>
+      <ul class="points">
+        <li><strong>IPO</strong> (Initial Public Offering) — company goes public first time</li>
+        <li><strong>FPO</strong> (Follow-on Public Offering) — already listed company raises more funds</li>
+        <li><strong>Rights Issue</strong> — offered to existing shareholders</li>
+        <li><strong>Bonus Issue</strong> — free shares to existing holders</li>
+        <li><strong>Private Placement / QIP</strong> — to institutional investors</li>
+      </ul>
+
+      <div class="sh">Secondary Market — Vital Functions</div>
+      <ul class="points">
+        <li>Nexus between savings and investments</li>
+        <li>Provides <strong>liquidity</strong> to investors</li>
+        <li>Enables <strong>continuous price formation</strong></li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark: Primary vs Secondary Market Answer Structure</div>
+        <ol>
+          <li>Intro: What is capital market?</li>
+          <li>Define Primary Market + features (4 points)</li>
+          <li>Methods: IPO, FPO, Rights, Bonus, Private Placement</li>
+          <li>Define Secondary Market + features</li>
+          <li>Functions of Secondary Market (3 points)</li>
+          <li>Comparison table</li>
+          <li>Conclusion: Both complement each other</li>
+        </ol>
+      </div>
+      <div class="exam-tip">Professor's MCQ asked: "Which market is called New Issue Market?" Answer = Primary Market. Also asked: "What is IPO?" Know this cold.</div>
+    </div>
+
+    <!-- Money Market -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">2.2 Money Market</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Money market is a market for short-term monetary assets with maturity of less than one year. It enables raising short-term funds to meet temporary shortages."</div>
+
+      <div class="sh">Features of Money Market Instruments</div>
+      <ul class="points">
+        <li><strong>High Liquidity</strong> — easily convertible to cash</li>
+        <li><strong>Secure Investment</strong> — mostly government-backed</li>
+        <li><strong>Fixed Returns</strong> — predictable income</li>
+        <li>Short maturity (less than 1 year)</li>
+      </ul>
+
+      <div class="sh">Money Market Instruments (Must Memorize All 7)</div>
+      <ul class="points">
+        <li><strong>Call Money</strong> — overnight lending between banks (1 day)</li>
+        <li><strong>Notice Money</strong> — 2 to 14 days lending</li>
+        <li><strong>Term Money</strong> — more than 14 days but less than 1 year</li>
+        <li><strong>Treasury Bills (T-Bills)</strong> — short-term government borrowing (91, 182, 364 days)</li>
+        <li><strong>Certificate of Deposit (CD)</strong> — issued by banks, tradeable</li>
+        <li><strong>Commercial Paper (CP)</strong> — issued by corporates for short-term needs</li>
+        <li><strong>Banker's Acceptance</strong> — bank-guaranteed trade bills</li>
+      </ul>
+
+      <div class="sh">Major Participants</div>
+      <ul class="points">
+        <li>RBI, Commercial Banks, Mutual Funds, Corporates, PSUs, Insurance Companies, NBFCs</li>
+        <li><strong>DFHI</strong> (Discount and Finance House of India) — incorporated March 1988, develops active secondary market for money market instruments</li>
+      </ul>
+
+      <div class="mnemonic">
+        <div class="m-word">CT³ BC B</div>
+        <div class="m-exp"><strong>C</strong>all Money · <strong>T</strong>reasury Bills · <strong>T</strong>erm Money · <strong>T</strong>ime/Notice Money · <strong>B</strong>anker's Acceptance · <strong>C</strong>ertificate of Deposit · <strong>C</strong>ommercial Paper</div>
+      </div>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark: Money Market Answer Structure</div>
+        <ol>
+          <li>Intro: Define money market</li>
+          <li>Features: Liquidity, Safety, Fixed Returns, Short-term</li>
+          <li>All 7 instruments with 1-line definition each</li>
+          <li>Major participants</li>
+          <li>Objectives: Equilibrium mechanism, focal point for liquidity, short-term funds at reasonable cost</li>
+          <li>Role of RBI in money market</li>
+          <li>Conclusion</li>
+        </ol>
+      </div>
+      <div class="kw-box">
+        <div class="kw-title">Must Memorize Keywords</div>
+        <span class="kw-pill">Call Money</span><span class="kw-pill">T-Bills</span><span class="kw-pill">CP</span><span class="kw-pill">CD</span><span class="kw-pill">DFHI</span><span class="kw-pill">Liquidity</span><span class="kw-pill">Short-term</span><span class="kw-pill">Less than 1 year</span>
+      </div>
+    </div>
+
+    <!-- SEBI -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">2.3 SEBI — Objectives &amp; Functions</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">SEBI = Securities and Exchange Board of India. Established 1992. Apex regulator of capital markets in India.</div>
+
+      <div class="sh">3 Main Objectives of SEBI</div>
+      <ul class="points">
+        <li><strong>Investor Protection</strong> — protect investors from fraud and malpractice</li>
+        <li><strong>Market Development</strong> — develop and regulate securities market</li>
+        <li><strong>Market Regulation</strong> — regulate intermediaries (brokers, merchant bankers)</li>
+      </ul>
+
+      <div class="sh">Key Functions of SEBI</div>
+      <ul class="points">
+        <li><strong>Regulatory:</strong> Registers and regulates intermediaries (brokers, investment advisors)</li>
+        <li><strong>Developmental:</strong> Promotes investor education and market literacy</li>
+        <li><strong>Protective:</strong> Prohibits insider trading, fraudulent practices</li>
+        <li>Supervises mutual funds</li>
+        <li>Regulates IPO process and listing requirements</li>
+        <li>Issues guidelines for investor protection</li>
+      </ul>
+
+      <div class="sh">Key Acts Governing Capital Markets</div>
+      <ul class="points">
+        <li>Securities Contracts (Regulation) Act, 1956</li>
+        <li>SEBI Act, 1992</li>
+        <li>Depositories Act, 1996</li>
+        <li>Companies Act, 2013</li>
+        <li>Banking Regulation Act, 1949</li>
+      </ul>
+      <div class="exam-tip">SEBI was established in 1992. Write "3 objectives" clearly. Evaluators expect: Investor protection, Market development, Market regulation — in that order.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== UNIT III ======================== -->
+<div id="u3" class="unit-section u3">
+  <div class="unit-banner">
+    <div class="unit-num">III</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit Three</div>
+      <div class="unit-title">Financial Services</div>
+      <div class="unit-topics-bar">Factoring · Insurance · Commercial Banking · Mutual Funds · Venture Capital · Merchant Banking · Consumer Finance · Leasing · Investment Banking</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <!-- Factoring -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">3.1 Factoring</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Factoring is a financial arrangement where a business sells its accounts receivable (invoices) to a third party called a Factor at a discount to get immediate cash."</div>
+
+      <div class="sh">3 Parties in Factoring</div>
+      <ul class="points">
+        <li><strong>Client (Seller):</strong> Business that sells its invoices</li>
+        <li><strong>Factor:</strong> Financial institution that buys the invoices</li>
+        <li><strong>Debtor (Customer):</strong> Who owes payment to the client</li>
+      </ul>
+
+      <div class="sh">7 Types of Factoring (Professor tested all in MCQs)</div>
+      <ul class="points">
+        <li><strong>1. Recourse Factoring:</strong> Client bears risk of non-payment. If debtor defaults, client repays factor.</li>
+        <li><strong>2. Non-Recourse Factoring:</strong> Factor bears risk. Client has no liability if debtor defaults.</li>
+        <li><strong>3. Domestic Factoring:</strong> All parties (client, factor, debtor) in same country.</li>
+        <li><strong>4. Export/International Factoring:</strong> Cross-border; exporter gets immediate payment for overseas invoices.</li>
+        <li><strong>5. Advance Factoring:</strong> Factor pays 70–90% of invoice upfront; balance after collection minus fee.</li>
+        <li><strong>6. Maturity Factoring:</strong> Factor pays on maturity date regardless of whether debtor has paid.</li>
+        <li><strong>7. Full-Service Factoring:</strong> Includes financing + credit assessment + receivables management.</li>
+      </ul>
+
+      <div class="sh">Factoring vs Securitisation</div>
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Factoring</th><th>Securitisation</th></tr>
+        <tr><td>Assets dealt</td><td>Book debts/invoices</td><td>Long-term loans</td></tr>
+        <tr><td>Nature</td><td>Short-term</td><td>Medium/Long-term</td></tr>
+        <tr><td>Collection</td><td>Factor collects</td><td>Originator or agent</td></tr>
+        <tr><td>Credit risk</td><td>Fully on factor (non-recourse)</td><td>Partially retained by originator</td></tr>
+      </table>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: Define factoring</li>
+          <li>3 parties involved</li>
+          <li>How factoring works (brief flow)</li>
+          <li>All 7 types with 1–2 lines each</li>
+          <li>Advantages: cash flow, risk transfer, outsourced collection</li>
+          <li>Conclusion: ideal for SMEs and exporters</li>
+        </ol>
+      </div>
+      <div class="mnemonic">
+        <div class="m-word">RNDAME-F</div>
+        <div class="m-exp"><strong>R</strong>ecourse · <strong>N</strong>on-Recourse · <strong>D</strong>omestic · <strong>A</strong>dvance · <strong>M</strong>aturity · <strong>E</strong>xport · <strong>F</strong>ull-Service</div>
+      </div>
+    </div>
+
+    <!-- Leasing -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">3.2 Leasing</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Leasing is a contractual arrangement where the owner (Lessor) allows another party (Lessee) to use an asset for a specified period in exchange for regular payments, without transferring ownership."</div>
+
+      <div class="sh">Types of Leasing</div>
+      <ul class="points">
+        <li><strong>Operating Lease:</strong> Short-term. Lessor retains ownership + risks/rewards. Lessee treats payments as expense. Example: Leasing printers for 3 years.</li>
+        <li><strong>Finance Lease (Capital Lease):</strong> Long-term. Lessee assumes most risks/rewards. Recorded as asset + liability on lessee's balance sheet. Example: Leasing machinery for 10 years.</li>
+        <li><strong>Sale and Leaseback:</strong> Owner sells asset to buyer, then leases it back. Gets immediate cash but retains use. Example: Company sells office building, leases it back for 15 years.</li>
+        <li><strong>Direct Lease:</strong> Lessor directly provides asset to lessee</li>
+        <li><strong>Cross-Border Lease:</strong> Parties in different countries</li>
+      </ul>
+
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Operating Lease</th><th>Finance Lease</th></tr>
+        <tr><td>Duration</td><td>Short-term</td><td>Long-term</td></tr>
+        <tr><td>Ownership</td><td>Stays with lessor</td><td>May transfer to lessee</td></tr>
+        <tr><td>Risk</td><td>Lessor bears</td><td>Lessee bears</td></tr>
+        <tr><td>Balance Sheet</td><td>Off balance sheet (expense)</td><td>Recorded as asset + liability</td></tr>
+      </table>
+      <div class="exam-tip">Professor's MCQ: "A finance lease is typically long-term, whereas an operating lease is short-term." Write exactly this distinction.</div>
+    </div>
+
+    <!-- Merchant Banking -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">3.3 Merchant Banking</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Merchant banking is a combination of banking and consultancy services. It provides advice on financial, marketing, managerial, and legal matters to businesses."</div>
+
+      <div class="sh">Services of Merchant Banks</div>
+      <ul class="points">
+        <li><strong>Portfolio Management</strong> — managing client's investment portfolio</li>
+        <li><strong>Underwriting</strong> — guarantee to buy unsold shares in an issue</li>
+        <li><strong>Loan Syndication</strong> — arranging loans from multiple banks</li>
+        <li><strong>Issue Management</strong> — managing IPO/FPO process</li>
+        <li><strong>Corporate Advisory</strong> — advice on mergers, restructuring</li>
+        <li>Project Counseling, Debenture Trustee, Venture Capital Financing</li>
+      </ul>
+
+      <div class="sh">Merchant Bankers in India</div>
+      <ul class="points">
+        <li><strong>Public Sector:</strong> SBI Capital Markets, IFCI Financial Services, Punjab National Bank</li>
+        <li><strong>Private Sector:</strong> ICICI Securities, Kotak Mahindra Capital, Axis Bank, Tata Capital</li>
+        <li><strong>Foreign:</strong> Goldman Sachs, Morgan Stanley, Citigroup, Deutsche Bank, DSP Merrill Lynch</li>
+      </ul>
+    </div>
+
+    <!-- Venture Capital -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">3.4 Venture Capital</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Venture Capital is a form of risk capital invested in businesses with a high risk but high growth potential. The investor becomes a co-promoter sharing risk and reward."</div>
+
+      <div class="sh">Key Features</div>
+      <ul class="points">
+        <li>Provided as <strong>equity capital</strong> (not loan)</li>
+        <li><strong>High Risk, High Return</strong> — professor's exact phrase</li>
+        <li>Continuous involvement in business after investment</li>
+        <li>Invested in <strong>small and medium enterprises</strong></li>
+        <li>Provides management expertise, not just money</li>
+      </ul>
+
+      <div class="sh">4 Stages of VC Funding (Must Write in Exam)</div>
+      <ol class="steps">
+        <li><strong>Seed Finance:</strong> Idea to business plan stage</li>
+        <li><strong>Implementation Stage:</strong> Setting up the firm/product</li>
+        <li><strong>Fledging Stage:</strong> Finance for teething/startup problems</li>
+        <li><strong>Establishment Stage:</strong> Rapid expansion — VC begins to exit/divest</li>
+      </ol>
+
+      <div class="sh">Why Venture Capital? (From Professor PPT)</div>
+      <ul class="points">
+        <li>Commercialise research and scientific knowledge</li>
+        <li>Provide risk finance to first-generation entrepreneurs</li>
+        <li>Tap intellectual properties</li>
+        <li>Promote innovation and entrepreneurship</li>
+        <li>Quality IPOs in capital market</li>
+      </ul>
+
+      <div class="mnemonic">
+        <div class="m-word">SIFE</div>
+        <div class="m-exp">VC Stages: <strong>S</strong>eed → <strong>I</strong>mplementation → <strong>F</strong>ledging → <strong>E</strong>stablishment</div>
+      </div>
+      <div class="exam-tip">Professor gave an entire Lecture 17 only on Venture Capital. This WILL appear. The 4 stages and "high risk high return" are scoring lines.</div>
+    </div>
+
+    <!-- Consumer Finance -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">3.5 Consumer Finance</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Consumer Finance refers to financial products and services that help individuals manage personal expenditures through credit or financing options."</div>
+
+      <div class="sh">4 Types of Consumer Credit</div>
+      <ul class="points">
+        <li><strong>Revolving Credit:</strong> Borrow up to credit limit, repay over time. E.g., Credit Cards, HELOCs</li>
+        <li><strong>Installment Credit:</strong> Fixed amount, repay in EMIs. E.g., Personal/Auto/Home loans</li>
+        <li><strong>Service Credit:</strong> Pay after usage for utilities. E.g., Electricity, mobile bills</li>
+        <li><strong>Retail Credit (BNPL):</strong> Buy Now Pay Later — purchase now, pay in installments. E.g., Klarna, Bajaj Finance EMI</li>
+      </ul>
+      <div class="sh">Consumer Finance Companies in India</div>
+      <ul class="points">
+        <li>Bajaj Finance Limited, Mahindra & Mahindra Financial Services, Tata Financial Services, Aditya Birla Finance</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== UNIT IV ======================== -->
+<div id="u4" class="unit-section u4">
+  <div class="unit-banner">
+    <div class="unit-num">IV</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit Four — HIGHEST WEIGHTAGE</div>
+      <div class="unit-title">Indian Banking System</div>
+      <div class="unit-topics-bar">Banks · Development Banks · NBFCs · NPA · SARFAESI · Banking Reforms · Bank Mergers · Scams · Digital Rupee</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <!-- Banking Structure -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.1 Structure &amp; Functions of Banks</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Banking encompasses financial activities including accepting deposits, lending money, facilitating transactions, and providing payment services. Banks serve as intermediaries."</div>
+
+      <div class="sh">Key Milestones in Indian Banking</div>
+      <ul class="points">
+        <li><strong>1935</strong> — RBI established</li>
+        <li><strong>1949</strong> — Banking Regulation Act</li>
+        <li><strong>1969</strong> — 14 banks nationalised</li>
+        <li><strong>1980</strong> — 6 more banks nationalised</li>
+        <li><strong>1991</strong> — Liberalisation reforms</li>
+        <li><strong>2000s</strong> — Digital banking revolution</li>
+      </ul>
+
+      <div class="sh">Types of Banks in India</div>
+      <ul class="points">
+        <li><strong>Commercial Banks:</strong> Public sector (SBI, PNB), Private (HDFC, ICICI), Foreign (HSBC)</li>
+        <li><strong>Cooperative Banks:</strong> Support rural and agricultural credit</li>
+        <li><strong>Regional Rural Banks (RRBs):</strong> Agriculture and rural economy development</li>
+        <li><strong>Development Banks:</strong> IDBI, SIDBI, NABARD, EXIM Bank — long-term sectoral financing</li>
+        <li><strong>Payments Banks &amp; Small Finance Banks:</strong> Financial inclusion focus</li>
+      </ul>
+
+      <div class="sh">Primary Functions of Banks</div>
+      <ul class="points">
+        <li><strong>Accepting Deposits:</strong> Demand deposits, savings deposits, fixed deposits</li>
+        <li><strong>Lending:</strong> Personal, auto, housing, corporate loans</li>
+        <li><strong>Priority Sector Lending:</strong> Agriculture, SMEs, weaker sections</li>
+        <li><strong>Credit Creation:</strong> Multiplying money supply through fractional reserve banking</li>
+      </ul>
+
+      <div class="sh">Secondary Functions</div>
+      <ul class="points">
+        <li>Investment services (mutual funds, insurance)</li>
+        <li>Agency functions (fund transfers, bill payments)</li>
+        <li>Advisory services (wealth management, tax planning)</li>
+      </ul>
+    </div>
+
+    <!-- Development Banks -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.2 Development Banks — NABARD, SIDBI, IDBI, EXIM</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Development Banks are specialised financial institutions providing long-term financing for development projects. Unlike commercial banks, their goal is economic development, not profit."</div>
+
+      <div class="sh">Key Development Banks (Memorize Years)</div>
+      <table class="cmp-table">
+        <tr><th>Bank</th><th>Year</th><th>Focus</th></tr>
+        <tr><td>IFCI</td><td>1948 (oldest)</td><td>Large-scale infrastructure financing</td></tr>
+        <tr><td>IDBI</td><td>1964</td><td>Industrial finance and project funding</td></tr>
+        <tr><td>NABARD</td><td>1982</td><td>Rural and agricultural financing, SHGs</td></tr>
+        <tr><td>EXIM Bank</td><td>1982</td><td>Export credit and trade financing</td></tr>
+        <tr><td>NHB</td><td>1988</td><td>Housing sector financing</td></tr>
+        <tr><td>SIDBI</td><td>1990</td><td>MSME financing, refinancing, tech assistance</td></tr>
+      </table>
+
+      <div class="sh">Objectives of Development Banks</div>
+      <ul class="points">
+        <li>Promoting industrial and agricultural growth</li>
+        <li>Financing priority sectors (agriculture, SMEs, housing)</li>
+        <li>Encouraging entrepreneurship and innovation</li>
+        <li>Reducing regional disparities</li>
+        <li>Export promotion and international trade</li>
+        <li>Supporting infrastructure development</li>
+      </ul>
+
+      <div class="sh">Development Banks vs Commercial Banks</div>
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Development Banks</th><th>Commercial Banks</th></tr>
+        <tr><td>Objective</td><td>Economic development</td><td>Profit generation</td></tr>
+        <tr><td>Loan period</td><td>Long-term</td><td>Short-term</td></tr>
+        <tr><td>Target sector</td><td>Priority/underdeveloped sectors</td><td>All sectors broadly</td></tr>
+        <tr><td>Focus</td><td>Developmental projects</td><td>Liquidity and deposits</td></tr>
+      </table>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: Define development banks</li>
+          <li>6 objectives of development banks</li>
+          <li>All 6 banks: name, year, 1-line function</li>
+          <li>NABARD in detail: rural credit, SHGs, capacity building</li>
+          <li>SIDBI in detail: MSME financing, refinancing</li>
+          <li>Comparison table with commercial banks</li>
+          <li>Conclusion: Catalysts for economic growth</li>
+        </ol>
+      </div>
+      <div class="mnemonic">
+        <div class="m-word">FINE-NS</div>
+        <div class="m-exp">Development Banks: <strong>F</strong>CI · <strong>I</strong>DBI · <strong>N</strong>ABARD · <strong>E</strong>XIM · <strong>N</strong>HB · <strong>S</strong>IDBI</div>
+      </div>
+    </div>
+
+    <!-- NPA -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.3 Non-Performing Assets (NPA)</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"A Non-Performing Asset (NPA) is a loan or advance where the borrower has not paid interest or principal for more than 90 days."</div>
+
+      <div class="sh">Classification of NPAs</div>
+      <ul class="points">
+        <li><strong>Sub-Standard Asset:</strong> NPA for less than 12 months</li>
+        <li><strong>Doubtful Asset:</strong> NPA for more than 12 months</li>
+        <li><strong>Loss Asset:</strong> Identified as loss by bank/auditor; uncollectible</li>
+      </ul>
+
+      <div class="sh">Causes of NPA</div>
+      <ul class="points">
+        <li>Weak credit appraisal by banks</li>
+        <li>Economic slowdown reducing borrower income</li>
+        <li><strong>Wilful default</strong> — borrower can pay but refuses to</li>
+        <li>Diversion of loan funds to other purposes</li>
+        <li>Political interference in lending decisions</li>
+        <li>Loan evergreening — hiding bad loans with new loans</li>
+      </ul>
+
+      <div class="sh">Impact of NPAs</div>
+      <ul class="points">
+        <li>Reduces bank profitability</li>
+        <li>Weakens capital adequacy ratio</li>
+        <li>Reduces credit availability in economy</li>
+        <li>Erodes public confidence in banks</li>
+      </ul>
+      <div class="exam-tip">NPA threshold = <strong>90 days</strong>. This number WILL appear in a 2-mark question. Never forget: Sub-Standard → Doubtful → Loss (SDS).</div>
+    </div>
+
+    <!-- SARFAESI -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.4 SARFAESI Act 2002</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"SARFAESI = Securitisation and Reconstruction of Financial Assets and Enforcement of Security Interest Act, 2002. Allows banks to recover NPAs WITHOUT going to court."</div>
+
+      <div class="sh">Prior to SARFAESI</div>
+      <ul class="points">
+        <li>Banks had to file cases in civil courts — very slow process</li>
+        <li>RDBI Act 1993 created Debt Recovery Tribunals (DRTs) — still slow</li>
+        <li>NPAs kept increasing — SARFAESI was the solution</li>
+      </ul>
+
+      <div class="sh">Objectives of SARFAESI</div>
+      <ul class="points">
+        <li>Recover NPAs <strong>without court intervention</strong></li>
+        <li>Facilitate <strong>securitisation</strong> of financial assets</li>
+        <li>Empower <strong>Asset Reconstruction Companies (ARCs)</strong></li>
+        <li>Faster resolution of stressed assets</li>
+      </ul>
+
+      <div class="sh">SARFAESI Process — Step by Step</div>
+      <ol class="steps">
+        <li>Loan classified as <strong>NPA</strong></li>
+        <li>Bank issues <strong>60-day notice</strong> under <strong>Section 13(2)</strong></li>
+        <li>Borrower can raise objection in writing</li>
+        <li>Bank must reply to objection within <strong>1 week (Section 13(3A))</strong></li>
+        <li>If still unpaid → bank takes <strong>physical possession</strong> of secured asset</li>
+        <li>Bank can <strong>sell, lease, or auction</strong> the asset</li>
+        <li>Proceeds: First → costs, Second → bank dues, Third → surplus to borrower</li>
+      </ol>
+
+      <div class="sh">Important Sections</div>
+      <ul class="points">
+        <li><strong>Section 13(2):</strong> 60-day notice to borrower</li>
+        <li><strong>Section 13(3A):</strong> Bank's reply to borrower's objection within 1 week</li>
+        <li><strong>Section 6(1):</strong> Acquisition of asset by securitisation company</li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: Why was SARFAESI needed?</li>
+          <li>Define SARFAESI (full form)</li>
+          <li>Background: RDBI Act 1993 failed → SARFAESI 2002</li>
+          <li>4 Objectives</li>
+          <li>Step-by-step process (7 steps, numbered)</li>
+          <li>Key sections: 13(2), 13(3A)</li>
+          <li>Impact: Reduced NPAs, faster recovery</li>
+          <li>Conclusion</li>
+        </ol>
+      </div>
+      <div class="kw-box">
+        <div class="kw-title">Must Memorize</div>
+        <span class="kw-pill">60-day notice</span><span class="kw-pill">Section 13(2)</span><span class="kw-pill">1 week reply</span><span class="kw-pill">ARC</span><span class="kw-pill">No court needed</span><span class="kw-pill">Physical possession</span><span class="kw-pill">Auction</span>
+      </div>
+    </div>
+
+    <!-- Securitisation -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.5 Securitisation</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Securitisation is the process of converting illiquid long-term assets (loans/receivables) into tradeable marketable securities issued against them."</div>
+
+      <div class="sh">6 Parties in Securitisation</div>
+      <ul class="points">
+        <li><strong>Originator:</strong> Bank/FI holding the loans</li>
+        <li><strong>SPV (Special Purpose Vehicle):</strong> Trust that buys and holds the assets</li>
+        <li><strong>Investment Banker:</strong> Structures the entire deal</li>
+        <li><strong>Credit Rating Agency:</strong> Rates the securities issued</li>
+        <li><strong>RPA (Receiving &amp; Paying Agent):</strong> Servicing agent</li>
+        <li><strong>Investors:</strong> Buy the securities</li>
+      </ul>
+
+      <div class="sh">5 Stages of Securitisation</div>
+      <ol class="steps">
+        <li><strong>Identification:</strong> Pool of eligible assets identified by originator</li>
+        <li><strong>Transfer:</strong> Assets transferred to SPV</li>
+        <li><strong>Issue:</strong> SPV issues securities to investors</li>
+        <li><strong>Redemption:</strong> Securities repaid from asset cash flows</li>
+        <li><strong>Credit Rating:</strong> Rating of issued securities</li>
+      </ol>
+
+      <div class="sh">Advantages of Securitisation</div>
+      <ul class="points">
+        <li>Additional source of funds</li>
+        <li>Removes NPAs from bank's balance sheet</li>
+        <li>Improves <strong>Capital Adequacy Ratio (CAR)</strong></li>
+        <li>Spreading credit risk among investors</li>
+        <li>Lower cost of funding</li>
+        <li>Higher rate of return for investors</li>
+      </ul>
+
+      <div class="sh">Securitisation in India</div>
+      <ul class="points">
+        <li>First attempt: <strong>Citibank securitised ICICI receivables, February 1991</strong> — ₹15 crore raised</li>
+        <li>Not popular due to: heavy stamp duty, cumbersome transfer procedures, absence of standardised documentation</li>
+        <li>Future bright due to liberalisation and capital market growth</li>
+      </ul>
+      <div class="exam-tip">Two separate PPTs were given on securitisation — this is the professor's biggest hint. Memorize: 6 parties, 5 stages, Citibank-ICICI 1991.</div>
+    </div>
+
+    <!-- Banking COVID -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.6 Banking Innovation During COVID-19</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"COVID-19 (2020–2024) acted as a digital accelerator for banking. Banks that had planned years of transformation were forced to do it in weeks."</div>
+
+      <div class="sh">Challenges Banks Faced</div>
+      <ul class="points">
+        <li>Branch closures due to lockdowns</li>
+        <li>Rising online fraud and phishing attacks</li>
+        <li>Surge in loan defaults (NPA increase)</li>
+        <li>Need for remote working infrastructure</li>
+      </ul>
+
+      <div class="sh">6 Key Innovations (Each = 1–2 Marks)</div>
+      <ul class="points">
+        <li><strong>1. Digital Banking Rise:</strong> Mobile app downloads surged 50%+. Digital KYC, 24/7 banking, paperless account opening.</li>
+        <li><strong>2. Contactless Payments:</strong> NFC tap-and-pay, QR codes (UPI surge), cash usage declined sharply.</li>
+        <li><strong>3. AI &amp; Chatbots:</strong> 24/7 query resolution, reduced call centre volume by 40%, personalised banking through ML.</li>
+        <li><strong>4. Cybersecurity:</strong> MFA (Multi-Factor Authentication), AI fraud detection, 30% increase in cybersecurity budgets.</li>
+        <li><strong>5. Remote Infrastructure:</strong> Work-from-home setup, Video KYC for loan processing, cloud-based banking systems.</li>
+        <li><strong>6. Financial Support:</strong> Loan moratoriums, EMI holidays, digital lending platforms, SME support schemes.</li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: COVID as a "digital accelerator"</li>
+          <li>Challenges faced (4 points)</li>
+          <li>6 innovations — each numbered with explanation</li>
+          <li>RBI measures: moratoriums, LTRO, repo rate cuts</li>
+          <li>Conclusion: Pandemic created permanent digital shift</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Bank Mergers -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.7 Bank Mergers in India</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Bank merger is the combining of two or more banks into a single entity. India has undergone major bank consolidation especially in 2019–2020."</div>
+
+      <div class="sh">Reasons for Bank Mergers</div>
+      <ul class="points">
+        <li>Create <strong>larger, stronger banks</strong> with more capital</li>
+        <li>Reduce duplication of services</li>
+        <li>Improve <strong>operational efficiency</strong></li>
+        <li>Better NPA management</li>
+        <li>Achieve economies of scale</li>
+        <li>Improve global competitiveness</li>
+      </ul>
+
+      <div class="sh">Major Mergers</div>
+      <ul class="points">
+        <li><strong>2019:</strong> Bank of Baroda + Vijaya Bank + Dena Bank</li>
+        <li><strong>2020:</strong> PNB + Oriental Bank of Commerce + United Bank; Canara + Syndicate; Union Bank + Andhra Bank + Corporation Bank; Indian Bank + Allahabad Bank</li>
+        <li>Result: 27 PSBs → 12 PSBs after consolidation</li>
+      </ul>
+
+      <div class="sh">Advantages vs Disadvantages</div>
+      <table class="cmp-table">
+        <tr><th>Advantages</th><th>Disadvantages</th></tr>
+        <tr><td>Larger capital base</td><td>Job losses and branch redundancy</td></tr>
+        <tr><td>Reduced NPA pressure</td><td>Integration challenges</td></tr>
+        <tr><td>Economies of scale</td><td>Culture clash between banks</td></tr>
+        <tr><td>Better global competition</td><td>Risk of monopoly</td></tr>
+      </table>
+    </div>
+
+    <!-- Digital Rupee -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.8 Digital Rupee (CBDC)</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH ★★★</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"The Digital Rupee (e₹) is India's Central Bank Digital Currency (CBDC) — a digital form of legal tender issued by the RBI with the same value as physical rupee."</div>
+
+      <div class="sh">Two Types</div>
+      <ul class="points">
+        <li><strong>e₹-W (Wholesale):</strong> For banks and financial institutions. Interbank settlements, government securities. <strong>Pilot: November 1, 2022</strong></li>
+        <li><strong>e₹-R (Retail):</strong> For general public. Everyday payments, P2P transfers via digital wallet. <strong>Pilot: December 1, 2022</strong></li>
+      </ul>
+
+      <div class="sh">Benefits</div>
+      <ul class="points">
+        <li>Reduces currency printing cost (₹4,984 crore annually)</li>
+        <li>Instant settlement (seconds not days)</li>
+        <li>Financial inclusion for unbanked population</li>
+        <li>Programmable for government subsidies</li>
+      </ul>
+
+      <div class="sh">Digital Rupee vs Cryptocurrency</div>
+      <table class="cmp-table">
+        <tr><th>Feature</th><th>Digital Rupee</th><th>Cryptocurrency</th></tr>
+        <tr><td>Issuer</td><td>RBI (central authority)</td><td>Decentralized (no authority)</td></tr>
+        <tr><td>Value</td><td>Stable (= ₹1)</td><td>Highly volatile</td></tr>
+        <tr><td>Technology</td><td>Permissioned blockchain</td><td>Open-source blockchain</td></tr>
+        <tr><td>Legal status</td><td>Legal tender</td><td>Not legal tender in India</td></tr>
+      </table>
+
+      <div class="kw-box">
+        <div class="kw-title">Must Memorize</div>
+        <span class="kw-pill">CBDC</span><span class="kw-pill">e₹-W</span><span class="kw-pill">e₹-R</span><span class="kw-pill">Nov 1, 2022</span><span class="kw-pill">Dec 1, 2022</span><span class="kw-pill">Permissioned blockchain</span><span class="kw-pill">RBI issued</span>
+      </div>
+    </div>
+
+    <!-- Banking Scams -->
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">4.9 Banking Scams in India</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"A banking scam is a deliberate financial fraud involving manipulation of banking systems or regulatory loopholes, resulting in unauthorised financial gain and systemic loss."</div>
+
+      <div class="sh">Types of Banking Scams</div>
+      <ul class="points">
+        <li><strong>Loan/Credit Frauds:</strong> Biggest by value. Fake documents, inflated financials, diversion of funds. (₹1,000–₹10,000 crore per case)</li>
+        <li><strong>Cyber/Digital Frauds:</strong> Fastest growing. OTP theft, phishing, fake apps, UPI scams.</li>
+        <li><strong>KYC/Identity Frauds:</strong> Fake Aadhaar/PAN, duplicate accounts, mule accounts.</li>
+        <li><strong>Corporate/Guarantee Frauds:</strong> Fake Letters of Undertaking (LoUs), SWIFT misuse.</li>
+        <li><strong>Loan Evergreening:</strong> New loan to hide old bad loan. Creates illusion of healthy books.</li>
+      </ul>
+
+      <div class="sh">PNB/Nirav Modi Scam — Case Study (Professor gave full PPT)</div>
+      <ul class="points">
+        <li>Scale: <strong>₹11,000+ crore</strong></li>
+        <li>Method: Fake <strong>Letters of Undertaking (LoUs)</strong> issued to overseas banks</li>
+        <li>SWIFT system not integrated with core banking system — exploited this gap</li>
+        <li>Loan rollover (evergreening) used to hide fraud for years</li>
+        <li>Impact: Led to <strong>SWIFT-CBS integration</strong> reform in Indian banks</li>
+      </ul>
+
+      <div class="sh">Systemic Causes</div>
+      <ul class="points">
+        <li>Weak internal controls and poor auditing</li>
+        <li>Political interference in loan approvals</li>
+        <li>Collusion between bank officials and fraudsters</li>
+        <li>Manual approval loopholes</li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: Define banking scam</li>
+          <li>5 types of scams with brief explanation</li>
+          <li>PNB fraud case study (₹11,000 crore, LoUs, SWIFT)</li>
+          <li>Systemic causes (4 points)</li>
+          <li>Prevention measures: MFA, internal audit, SWIFT integration</li>
+          <li>Conclusion</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== UNIT V ======================== -->
+<div id="u5" class="unit-section u5">
+  <div class="unit-banner">
+    <div class="unit-num">V</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit Five</div>
+      <div class="unit-title">Foreign Exchange Market</div>
+      <div class="unit-topics-bar">Forex Market · Types of Exchange Rates · Currency Convertibility · Devaluation · Depreciation</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">5.1 Foreign Exchange Market</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Foreign exchange (forex) refers to the global marketplace for buying and selling national currencies to facilitate international trade, investment, and financial transactions."</div>
+
+      <div class="sh">Types of Forex Markets</div>
+      <ul class="points">
+        <li><strong>Spot Market:</strong> Immediate exchange of currencies at current rate</li>
+        <li><strong>Forward Market:</strong> Agreement to buy/sell at a future date at pre-agreed price</li>
+        <li><strong>Futures Market:</strong> Standardised contracts traded on exchanges</li>
+        <li><strong>Options Market:</strong> Right (not obligation) to buy/sell at specific price</li>
+      </ul>
+
+      <div class="sh">Market Participants</div>
+      <ul class="points">
+        <li><strong>Central Banks:</strong> Control monetary policy and intervene to stabilise currency</li>
+        <li><strong>Commercial Banks:</strong> Handle large volumes of currency trading</li>
+        <li><strong>Investment Managers:</strong> Speculative trading</li>
+        <li><strong>Retail Traders:</strong> Individuals speculating on currency movements</li>
+      </ul>
+
+      <div class="sh">India's Exchange Rate System</div>
+      <ul class="points">
+        <li>India uses a <strong>Managed Floating Exchange Rate</strong> system</li>
+        <li>Rupee value primarily determined by market forces (demand &amp; supply)</li>
+        <li>RBI intervenes to <strong>prevent excessive volatility</strong></li>
+        <li>Historical: INR 4.76/USD (1947) → ~₹84/USD (2024)</li>
+        <li>India's Forex Reserves: ~$693 billion (among world's largest)</li>
+      </ul>
+
+      <div class="sh">Balance of Payments (BOP)</div>
+      <ul class="points">
+        <li>Surplus BOP = Foreign currency inflow &gt; outflow → strong domestic currency</li>
+        <li>Deficit BOP = Outflow &gt; inflow → weak domestic currency</li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">5.2 Fixed vs Flexible Exchange Rate</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Fixed Exchange Rate</th><th>Flexible Exchange Rate</th></tr>
+        <tr><td>Determination</td><td>Set by government/central bank</td><td>Market forces (demand &amp; supply)</td></tr>
+        <tr><td>Stability</td><td>Very stable</td><td>Volatile, fluctuates</td></tr>
+        <tr><td>Intervention</td><td>Frequent central bank intervention</td><td>Minimal intervention</td></tr>
+        <tr><td>Speculation</td><td>Very low</td><td>Very high</td></tr>
+        <tr><td>Examples</td><td>UAE Dirham, Saudi Riyal, HK Dollar</td><td>USD, GBP, JPY, EUR, INR (managed)</td></tr>
+        <tr><td>Also called</td><td>Pegged rate</td><td>Floating rate</td></tr>
+      </table>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">5.3 Devaluation vs Depreciation</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <table class="cmp-table">
+        <tr><th>Basis</th><th>Devaluation</th><th>Depreciation</th></tr>
+        <tr><td>Meaning</td><td>Deliberate reduction in currency value by government</td><td>Natural fall in currency value due to market forces</td></tr>
+        <tr><td>Decision</td><td>Policy decision (intentional)</td><td>Market-driven (automatic)</td></tr>
+        <tr><td>Exchange rate system</td><td>Fixed exchange rate system</td><td>Floating exchange rate system</td></tr>
+        <tr><td>Who controls</td><td>Government/Central Bank</td><td>Market (demand &amp; supply)</td></tr>
+        <tr><td>Example</td><td>India devalued rupee in 1966, 1991</td><td>INR falling from ₹65 to ₹84/USD</td></tr>
+      </table>
+      <div class="exam-tip">This distinction is THE most asked question in Unit V. Learn the table perfectly. Key line: "Devaluation = policy decision; Depreciation = market decision."</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== UNIT VI ======================== -->
+<div id="u6" class="unit-section u6">
+  <div class="unit-banner">
+    <div class="unit-num">VI</div>
+    <div class="unit-info">
+      <div class="unit-label">Unit Six</div>
+      <div class="unit-title">Financial Regulations</div>
+      <div class="unit-topics-bar">Financial Market Regulation · SEBI · Mutual Fund Supervision · PMLA 2002 · Forward Markets Commission · COVID Impact on Capital Markets</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">6.1 Prevention of Money Laundering Act (PMLA) 2002</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-high">HIGH</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <div class="def-box">"Money laundering is the process of making illegally obtained money appear legitimate by passing it through a series of transactions."</div>
+
+      <div class="sh">3 Stages of Money Laundering</div>
+      <ol class="steps">
+        <li><strong>Placement:</strong> Placing illegal funds into the financial system (cash deposits, cash purchases)</li>
+        <li><strong>Layering:</strong> Disguising the trail through complex transactions (wire transfers, shell companies)</li>
+        <li><strong>Integration:</strong> Reintroducing laundered money into the legitimate economy (buying property, businesses)</li>
+      </ol>
+
+      <div class="sh">PMLA 2002 — Key Provisions</div>
+      <ul class="points">
+        <li>Enacted to prevent and control money laundering</li>
+        <li><strong>Enforcement Directorate (ED)</strong> is the primary investigating agency</li>
+        <li>Banks and FIs must maintain records and report suspicious transactions</li>
+        <li>Attachment and confiscation of proceeds of crime</li>
+        <li>India reported: 5,200+ money laundering cases by ED since 2014</li>
+        <li>6,300+ total PMLA cases investigated till 2025</li>
+      </ul>
+
+      <div class="sh">Methods Used in Money Laundering</div>
+      <ul class="points">
+        <li><strong>Shell companies:</strong> Fake companies to rotate and hide money</li>
+        <li><strong>Loan Evergreening:</strong> Using new loans to hide bad debt</li>
+        <li><strong>Trade-Based Money Laundering (TBML):</strong> Over/under-invoicing imports and exports</li>
+        <li><strong>Hawala:</strong> Informal value transfer system outside banking</li>
+      </ul>
+
+      <div class="structure-box">
+        <div class="sb-title">10-Mark Answer Structure</div>
+        <ol>
+          <li>Intro: What is money laundering?</li>
+          <li>3 stages: Placement, Layering, Integration</li>
+          <li>PMLA 2002: purpose and key provisions</li>
+          <li>Enforcement Directorate role</li>
+          <li>Methods used in laundering</li>
+          <li>Impact on Indian financial system</li>
+          <li>Conclusion</li>
+        </ol>
+      </div>
+
+      <div class="mnemonic">
+        <div class="m-word">PLI</div>
+        <div class="m-exp">Money Laundering Stages: <strong>P</strong>lacement → <strong>L</strong>ayering → <strong>I</strong>ntegration</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">6.2 Regulation of Financial Markets (SEBI's Role in Unit VI)</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">2 + 10 marks</span>
+        </div>
+      </div>
+      <ul class="points">
+        <li>SEBI regulates: capital markets, mutual funds, brokers, merchant bankers, FIIs</li>
+        <li>RBI regulates: banking sector, money market, forex market</li>
+        <li>IRDA regulates: insurance companies</li>
+        <li>PFRDA regulates: pension funds</li>
+      </ul>
+
+      <div class="sh">Supervision of Mutual Funds</div>
+      <ul class="points">
+        <li>SEBI oversees all mutual funds in India</li>
+        <li>Mutual funds must be registered with SEBI</li>
+        <li>AMFI (Association of Mutual Funds in India) is self-regulatory body</li>
+        <li>NAV (Net Asset Value) must be disclosed daily</li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-title">6.3 Impact of COVID-19 on Indian Capital Markets</div>
+        <div class="topic-meta">
+          <span class="prob-badge prob-med">MEDIUM</span>
+          <span class="marks-badge">10 marks</span>
+        </div>
+      </div>
+      <ul class="points">
+        <li>Sensex crashed 38% in March 2020 — largest fall in decades</li>
+        <li>FII outflows: ₹1.1 lakh crore withdrawn in March 2020</li>
+        <li>SEBI relaxed margin requirements and extended trading hours</li>
+        <li>RBI emergency measures: repo rate cut, LTRO, moratorium</li>
+        <li>Recovery: Market recovered by December 2020 — new all-time highs</li>
+        <li>Retail investor surge: Demat accounts grew by 1.42 crore in FY2021</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== FINAL SECTION ======================== -->
+<div id="final" class="final-section">
+  <div class="final-title">★ Final Strategy — Most Important 20 Topics, Skip List &amp; Tonight's Plan</div>
+
+  <div class="grid2">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;">Top 20 Topics — Ranked by Marks Potential</div>
+
+      <div class="ranked-item"><div class="rank-num">1</div><div class="rank-content"><div class="rank-title">NPA + SARFAESI Act</div><div class="rank-why">Unit IV · 2 PPTs · 2+10 marks · Section 13(2) is gold</div></div></div>
+      <div class="ranked-item"><div class="rank-num">2</div><div class="rank-content"><div class="rank-title">Factoring — All 7 Types</div><div class="rank-why">Unit III · MCQs tested in class · Full structured answer ready</div></div></div>
+      <div class="ranked-item"><div class="rank-num">3</div><div class="rank-content"><div class="rank-title">Securitisation — 5 Stages + 6 Parties</div><div class="rank-why">Unit IV · 2 PPTs by professor · Citibank-ICICI 1991</div></div></div>
+      <div class="ranked-item"><div class="rank-num">4</div><div class="rank-content"><div class="rank-title">Development Banks (NABARD/SIDBI/IDBI)</div><div class="rank-why">Unit IV · Own PPT · Dates are scoring</div></div></div>
+      <div class="ranked-item"><div class="rank-num">5</div><div class="rank-content"><div class="rank-title">Venture Capital — SIFE Stages</div><div class="rank-why">Unit III · Full dedicated lecture (Lecture 17)</div></div></div>
+      <div class="ranked-item"><div class="rank-num">6</div><div class="rank-content"><div class="rank-title">Digital Rupee (CBDC)</div><div class="rank-why">Unit IV · Own PPT · Modern topic · Crypto comparison</div></div></div>
+      <div class="ranked-item"><div class="rank-num">7</div><div class="rank-content"><div class="rank-title">COVID-19 Banking Innovations</div><div class="rank-why">Unit IV · Entire PPT dedicated · Professor wants this</div></div></div>
+      <div class="ranked-item"><div class="rank-num">8</div><div class="rank-content"><div class="rank-title">SEBI — Objectives &amp; Functions</div><div class="rank-why">Unit II + VI · Own PPT · Classic exam topic</div></div></div>
+      <div class="ranked-item"><div class="rank-num">9</div><div class="rank-content"><div class="rank-title">Leasing Types (Operating, Finance, S&amp;LB)</div><div class="rank-why">Unit III · Professor MCQ tested it</div></div></div>
+      <div class="ranked-item"><div class="rank-num">10</div><div class="rank-content"><div class="rank-title">PMLA 2002 — Money Laundering</div><div class="rank-why">Unit VI · PLI stages are scoring</div></div></div>
+      <div class="ranked-item"><div class="rank-num">11</div><div class="rank-content"><div class="rank-title">Bank Mergers in India</div><div class="rank-why">Unit IV · Own PPT · 2019–20 consolidation facts</div></div></div>
+      <div class="ranked-item"><div class="rank-num">12</div><div class="rank-content"><div class="rank-title">Banking Scams (PNB/Nirav Modi)</div><div class="rank-why">Unit IV · Own PPT with case study · ₹11,000 crore</div></div></div>
+      <div class="ranked-item"><div class="rank-num">13</div><div class="rank-content"><div class="rank-title">Primary Market vs Secondary Market</div><div class="rank-why">Unit II · Comparison table = instant marks</div></div></div>
+      <div class="ranked-item"><div class="rank-num">14</div><div class="rank-content"><div class="rank-title">Money Market Instruments (All 7)</div><div class="rank-why">Unit II · MCQs tested in class</div></div></div>
+      <div class="ranked-item"><div class="rank-num">15</div><div class="rank-content"><div class="rank-title">Devaluation vs Depreciation</div><div class="rank-why">Unit V · Own PPT · Classic 2-mark distinction</div></div></div>
+      <div class="ranked-item"><div class="rank-num">16</div><div class="rank-content"><div class="rank-title">Merchant Banking — Services</div><div class="rank-why">Unit III · Multiple services = full 10-mark structure</div></div></div>
+      <div class="ranked-item"><div class="rank-num">17</div><div class="rank-content"><div class="rank-title">Fixed vs Flexible Exchange Rate</div><div class="rank-why">Unit V · Table comparison = easy marks</div></div></div>
+      <div class="ranked-item"><div class="rank-num">18</div><div class="rank-content"><div class="rank-title">Indian Financial System — Components &amp; Functions</div><div class="rank-why">Unit I · Foundation topic</div></div></div>
+      <div class="ranked-item"><div class="rank-num">19</div><div class="rank-content"><div class="rank-title">Consumer Finance — Types of Credit</div><div class="rank-why">Unit III · BNPL is current affairs angle</div></div></div>
+      <div class="ranked-item"><div class="rank-num">20</div><div class="rank-content"><div class="rank-title">Indian Banking System Structure</div><div class="rank-why">Unit IV · Nationalization years are facts-based scoring</div></div></div>
+    </div>
+
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;">Topics to Skip If Time is Very Less</div>
+
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>Derivatives (DCM PPT)</strong><small>Not in syllabus weightage. Complex. Low chance. Skip entirely.</small></div></div>
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>Forward Markets Commission (FMC)</strong><small>Mentioned in Unit VI syllabus but barely in any PPT. Only if time left.</small></div></div>
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>Currency Convertibility (deep theory)</strong><small>Know 2-mark definition only. Skip 10-mark prep.</small></div></div>
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>Deep RBI history and functions</strong><small>Know basic functions for 2-marks. No 10-mark prep needed.</small></div></div>
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>Project Finance (Unit III)</strong><small>Mentioned in syllabus but NOT covered in any PPT. Skip.</small></div></div>
+      <div class="skip-item"><div class="skip-x">✗</div><div class="skip-content"><strong>State Financial Corporations (SFCs) / SIDCs</strong><small>Only 2-mark definitions at most. Don't prepare 10-mark.</small></div></div>
+
+      <div style="margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;">Best Study Order for Tonight</div>
+
+      <table class="cmp-table">
+        <tr><th>Time</th><th>Topics</th><th>Marks Potential</th></tr>
+        <tr><td>Hour 1</td><td>NPA + SARFAESI (with steps) + Factoring (7 types)</td><td>30+ marks</td></tr>
+        <tr><td>Hour 2</td><td>Development Banks + Securitisation (5 stages) + Digital Rupee</td><td>25+ marks</td></tr>
+        <tr><td>Hour 3</td><td>Venture Capital + COVID Banking + Leasing Types</td><td>20+ marks</td></tr>
+        <tr><td>Hour 4</td><td>PMLA + Devaluation/Depreciation + Money Market instruments</td><td>15+ marks</td></tr>
+        <tr><td>Hour 5</td><td>All 2-mark definitions + Comparison tables review</td><td>20+ marks</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- BRUTAL FINAL STRATEGY -->
+  <div class="strat-box">
+    <h3>Brutal Last-Minute Exam Strategy</h3>
+    <ul>
+      <li><strong>For 2-mark questions:</strong> Definition (1 line) + 2–3 key points. Never write more than 5 lines. Speed is important.</li>
+      <li><strong>For 10-mark questions:</strong> Always use numbered points, small headings, one comparison table if relevant. Evaluator scans — headings = marks.</li>
+      <li><strong>First 5 minutes in exam:</strong> Read all questions. Circle ones you know best. Attempt those first — build confidence and marks together.</li>
+      <li><strong>Keywords to write in EVERY answer:</strong> NPA (90 days), SARFAESI (60-day notice), SPV, CBDC, LoU, ARC, RBI, SEBI. Evaluators scan for these.</li>
+      <li><strong>Never leave a blank:</strong> Even 3–4 points on a topic you half-know gets you 4–5 marks. Blank = zero.</li>
+      <li><strong>Comparison table trick:</strong> If any question compares two things, draw a 4-column table. Even with 4 rows, it looks like a thorough answer.</li>
+      <li><strong>Conclusion is mandatory:</strong> Last 2 lines: "In conclusion, [topic] plays a vital role in [economic development / financial stability / investor protection]." Never skip it.</li>
+      <li><strong>Use examples:</strong> Citibank-ICICI 1991, Nirav Modi ₹11,000 crore, NABARD 1982 — real examples = extra marks.</li>
+      <li><strong>Time allocation:</strong> 2-mark = 3 min each | 10-mark = 12 min each. Stick to this ruthlessly.</li>
+      <li><strong>Unit IV is your goldmine:</strong> If exam has 5 questions, expect 2–3 from Unit IV. Spend 60% of your study time there.</li>
+    </ul>
+  </div>
+
+  <!-- KEYWORDS MASTER LIST -->
+  <div style="margin-top:24px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Master Keyword List — Write These in Exam</div>
+    <div>
+      <span class="kw-pill">NPA</span><span class="kw-pill">90 days</span><span class="kw-pill">SARFAESI</span><span class="kw-pill">60-day notice</span><span class="kw-pill">Section 13(2)</span><span class="kw-pill">ARC</span><span class="kw-pill">SPV</span><span class="kw-pill">Originator</span><span class="kw-pill">Securitisation</span><span class="kw-pill">Citibank-ICICI 1991</span><span class="kw-pill">NABARD 1982</span><span class="kw-pill">SIDBI 1990</span><span class="kw-pill">IDBI 1964</span><span class="kw-pill">IFCI 1948</span><span class="kw-pill">CBDC</span><span class="kw-pill">e₹-W</span><span class="kw-pill">e₹-R</span><span class="kw-pill">Permissioned blockchain</span><span class="kw-pill">Factor</span><span class="kw-pill">Recourse</span><span class="kw-pill">Non-Recourse</span><span class="kw-pill">Advance Factoring</span><span class="kw-pill">Operating Lease</span><span class="kw-pill">Finance Lease</span><span class="kw-pill">Sale and Leaseback</span><span class="kw-pill">VC = High Risk High Return</span><span class="kw-pill">SIFE Stages</span><span class="kw-pill">Seed Finance</span><span class="kw-pill">Placement</span><span class="kw-pill">Layering</span><span class="kw-pill">Integration</span><span class="kw-pill">PMLA 2002</span><span class="kw-pill">ED</span><span class="kw-pill">LoU</span><span class="kw-pill">Loan Evergreening</span><span class="kw-pill">PNB ₹11,000 crore</span><span class="kw-pill">SEBI 1992</span><span class="kw-pill">Treasury Bills</span><span class="kw-pill">Call Money</span><span class="kw-pill">DFHI</span><span class="kw-pill">IPO</span><span class="kw-pill">Devaluation = policy</span><span class="kw-pill">Depreciation = market</span><span class="kw-pill">Managed Float</span><span class="kw-pill">Video KYC</span><span class="kw-pill">UPI</span>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center; padding:32px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:11px; border-top:1px solid var(--rule); margin-top:40px;">
+  FIN213 Unit-Wise Smart Notes &nbsp;·&nbsp; Built from 27 professor PPTs + official syllabus &nbsp;·&nbsp; You've got this, Pawan. ⚡
+</div>
+
+</div><!-- end container -->
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if(t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
